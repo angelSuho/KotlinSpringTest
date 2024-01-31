@@ -38,8 +38,8 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 
 	// security
-	implementation("org.springframework.boot:spring-boot-starter-security")
-	implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
+//	implementation("org.springframework.boot:spring-boot-starter-security")
+//	implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
 
 	// jwt
 	implementation("io.jsonwebtoken:jjwt-api:0.11.5")
@@ -53,8 +53,11 @@ dependencies {
 	// db
 	runtimeOnly("com.h2database:h2")
 	runtimeOnly("com.mysql:mysql-connector-j")
-	implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
+//	implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
 	implementation("org.springframework.boot:spring-boot-starter-data-redis")
+
+	// websocket
+	implementation("org.springframework.boot:spring-boot-starter-websocket")
 
 	// test
 	testImplementation("org.springframework.boot:spring-boot-starter-test")

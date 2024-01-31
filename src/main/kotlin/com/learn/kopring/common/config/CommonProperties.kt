@@ -1,4 +1,4 @@
-package com.learn.kopring.common.infrastructure.config
+package com.learn.kopring.common.config
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.boot.context.properties.bind.ConstructorBinding

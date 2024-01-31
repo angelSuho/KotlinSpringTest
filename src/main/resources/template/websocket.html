@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WebSocket Test</title>
+    <script>
+        var socket;
+        function connect() {
+            socket = new WebSocket('ws://localhost:8080/pt');
+
+            socket.onopen = function() {
+                console.log('Connected');
+            };
+
+            socket.onmessage = function(event) {
+                console.log('Received message: ' + event.data);
+            };
+
+            socket.onclose = function() {
+                console.log('Disconnected');
+            };
+        }
+
+        function sendCommand(command, presentationId, data) {
+            const message = JSON.stringify({
+                command: command,
+                presentationId: presentationId,
+                data: data
+            });
+            socket.send(message);
+        }
+    </script>
+</head>
+<body>
+    <h1>WebSocket Test Page</h1>
+    <button onclick="connect()">Connect WebSocket</button>
+    <br><br>
+    <input type="text" id="presentationId" placeholder="Presentation ID">
+    <input type="text" id="field" placeholder="Field">
+    <input type="text" id="value" placeholder="Value">
+    <button onclick="sendCommand('updateField', document.getElementById('presentationId').value, { field: document.getElementById('field').value, value: document.getElementById('value').value })">Send Update Field Command</button>
+    <button onclick="sendCommand('deleteAllFields', document.getElementById('presentationId').value, {})">Send Delete All Fields Command</button>
+</body>
+</html>
