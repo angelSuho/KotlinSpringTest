@@ -13,6 +13,7 @@ class WebSocketConfig(
 ) : WebSocketConfigurer {
 
     override fun registerWebSocketHandlers(registry: WebSocketHandlerRegistry) {
-        registry.addHandler(presentationWebSocketHandler, "/pt").setAllowedOrigins("*")
+        registry.addHandler(presentationWebSocketHandler, "/pt")
+            .setAllowedOrigins("*")
     }
 }
