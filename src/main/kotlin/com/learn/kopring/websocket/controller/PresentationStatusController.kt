@@ -36,21 +36,21 @@ class PresentationStatusController(
         return qrcodeByteArray
     }
 
-    @MessageMapping("/{qrCode}/insertStatus")
+    @MessageMapping("/{qrCode}/insert")
     fun insertPresentationStatus(@PathVariable qrCode: String,
                                  request: InsertActionRequest) {
         presentationPracticeService.insertPresentation(qrCode, request.notificationStatus.toBoolean())
         messagingTemplate.convertAndSend("/practice/$qrCode", request)
     }
 
-    @MessageMapping("/{qrCode}/updateStatus")
+    @MessageMapping("/{qrCode}/update")
     fun updatePresentationStatus(@PathVariable qrCode: String,
                                 request: UpdateActionRequest) {
         presentationPracticeService.updatePresentationField(qrCode, request)
         messagingTemplate.convertAndSend("/practice/$qrCode", request)
     }
 
-    @MessageMapping("/{qrCode}/deleteStatus")
+    @MessageMapping("/{qrCode}/delete")
     fun deletePresentationStatus(@PathVariable qrCode: String) {
         presentationPracticeService.deletePresentation(qrCode)
     }
