@@ -58,7 +58,7 @@ class PresentationStatusController(
     @MessageMapping("/{qrCode}/{field}")
     fun getPresentationStatus(@PathVariable qrCode: String,
                               @PathVariable field: String) {
-        val presentationStatus = presentationPracticeService.getPresentationStatus(qrCode, field)
-        messagingTemplate.convertAndSend("/practice/$qrCode", presentationStatus!!)
+        val value = presentationPracticeService.getPresentationStatus(qrCode, field)
+        messagingTemplate.convertAndSend("/practice/$qrCode", value!!)
     }
 }
