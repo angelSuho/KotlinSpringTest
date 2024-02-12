@@ -21,7 +21,7 @@ class PresentationStatusController(
     private val messagingTemplate: SimpMessagingTemplate,
 ) {
 
-    @GetMapping("/generateQRCode")
+    @GetMapping("/generate-qrcode")
     fun generateQRCode(): ByteArray {
         val qrCodeContent = "http://localhost:8080/action/${UUID.randomUUID()}"
         val width = 250
@@ -32,7 +32,8 @@ class PresentationStatusController(
 
         val outputStream = ByteArrayOutputStream()
         MatrixToImageWriter.writeToStream(bitMatrix, "PNG", outputStream)
-        return outputStream.toByteArray()
+        val qrcodeByteArray = outputStream.toByteArray()
+        return qrcodeByteArray
     }
 
     @MessageMapping("/{qrCode}/insertStatus")
