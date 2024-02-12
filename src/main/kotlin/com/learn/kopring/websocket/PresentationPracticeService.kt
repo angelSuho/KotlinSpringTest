@@ -2,6 +2,7 @@ package com.learn.kopring.websocket
 
 import com.learn.kopring.common.config.CommonProperties
 import com.learn.kopring.common.service.RedisService
+import com.learn.kopring.websocket.dto.UpdateActionRequest
 import org.springframework.stereotype.Service
 import java.time.Duration
 import java.time.Instant
@@ -19,21 +20,21 @@ class PresentationPracticeService(
         startRecording(qrCode)
     }
 
-    fun updatePresentationField(qrCode: String, field: String, value: String) {
-        when (field) {
+    fun updatePresentationField(qrCode: String, request: UpdateActionRequest) {
+        when (request.command) {
             commonProperties.notificationStatus -> {
-                validateAndUpdateField(value, qrCode, commonProperties.notificationStatus)
+                validateAndUpdateField(qrCode, commonProperties.notificationStatus, request.value)
             }
             commonProperties.slideIndex -> {
-                redisService.updateHashField(qrCode, commonProperties.slideIndex, value)
+                redisService.updateHashField(qrCode, commonProperties.slideIndex, request.value)
             }
             commonProperties.recordCondition -> {
-                validateAndUpdateField(value, qrCode, commonProperties.recordCondition)
+                validateAndUpdateField(qrCode, commonProperties.recordCondition, request.value)
             }
         }
     }
 
-    private fun validateAndUpdateField(value: String, qrCode: String, field: String) {
+    private fun validateAndUpdateField(qrCode: String, field: String, value: String) {
         when (field) {
             commonProperties.recordCondition -> {
                 when (value) {
@@ -79,7 +80,7 @@ class PresentationPracticeService(
             val newAccumulatedTime = accumulatedTime.plus(duration)
 
             // 누적 시간 업데이트
-            updatePresentationField(qrCode, commonProperties.accumulatedPresentationTime, newAccumulatedTime.toString())
+            redisService.updateHashField(qrCode, commonProperties.accumulatedPresentationTime, newAccumulatedTime.toString())
         }
     }
 }

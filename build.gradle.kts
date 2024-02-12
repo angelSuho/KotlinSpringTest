@@ -66,6 +66,9 @@ dependencies {
 	// jasypt
 	implementation("com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5")
 
+	// qrCode
+	implementation("com.google.zxing:core:3.5.3")
+	implementation("com.google.zxing:javase:3.5.3")
 }
 
 tasks.withType<KotlinCompile> {

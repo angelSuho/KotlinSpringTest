@@ -1,60 +1,16 @@
 package com.learn.kopring.common.service
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.learn.kopring.websocket.dto.PresentationStatus
 import org.springframework.data.redis.core.RedisTemplate
-import org.springframework.data.redis.core.ValueOperations
 import org.springframework.stereotype.Service
-import java.time.LocalDateTime
 
 @Service
 class RedisService(
     private val redisTemplate: RedisTemplate<String, Any>,
     private val objectMapper: ObjectMapper,
 ) {
-
-    private val valueOperations: ValueOperations<String, Any> = redisTemplate.opsForValue()
     private val hashOperations = redisTemplate.opsForHash<String, String>()
 
-    fun printAllValues() {
-        val keys = redisTemplate.keys("*") ?: return
-        keys.forEach { key ->
-            val value = redisTemplate.opsForValue().get(key)
-            println("Key: $key, Value: $value")
-        }
-    }
-
-    /**
-     * json 방식
-     * */
-    fun savePresentationStatus(status: PresentationStatus) {
-        val jsonString = objectMapper.writeValueAsString(status)
-        valueOperations.set(status.presentationId, jsonString)
-    }
-
-    fun getPresentationStatus(presentationId: String): PresentationStatus? {
-        val jsonString = valueOperations.get(presentationId) ?: return null
-        return objectMapper.readValue(jsonString.toString(), PresentationStatus::class.java)
-    }
-
-    fun updatePresentationFieldForJson(presentationId: String, field: String, value: String) {
-        val status = getPresentationStatus(presentationId) ?: return
-        when(field) {
-            "notificationStatus" -> status.notificationStatus = value
-            "slideIndex" -> status.slideIndex = value.toInt()
-            "accumulatedPresentationTime" -> status.accumulatedPresentationTime = LocalDateTime.parse(value)
-            "recentPresentationStartTime" -> status.recentPresentationStartTime = LocalDateTime.parse(value)
-        }
-        savePresentationStatus(status)
-    }
-
-    fun deletePresentationFieldForJson(presentationId: String) {
-        redisTemplate.delete(presentationId)
-    }
-
-    /**
-     * 해쉬 방식
-     * */
     fun printHashTable(hashName: String) {
         println("Printing HashTable: $hashName")
         val keys = redisTemplate.opsForHash<String, String>().keys(hashName)
