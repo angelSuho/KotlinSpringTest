@@ -6,6 +6,7 @@ import com.google.zxing.qrcode.QRCodeWriter
 import com.learn.kopring.websocket.PresentationPracticeService
 import com.learn.kopring.websocket.dto.InsertActionRequest
 import com.learn.kopring.websocket.dto.UpdateActionRequest
+import org.springframework.messaging.handler.annotation.DestinationVariable
 import org.springframework.messaging.handler.annotation.MessageMapping
 import org.springframework.messaging.simp.SimpMessagingTemplate
 import org.springframework.stereotype.Controller
@@ -36,18 +37,23 @@ class PresentationStatusController(
         return qrcodeByteArray
     }
 
+    @MessageMapping("/chat/message/{code}")
+fun sendMessage(@DestinationVariable code: String, message: String) {
+        messagingTemplate.convertAndSend("/sub/chat/message/$code", message)
+    }
+
     @MessageMapping("/{qrCode}/insert")
-    fun insertPresentationStatus(@PathVariable qrCode: String,
+    fun insertPresentationStatus(@DestinationVariable qrCode: String,
                                  request: InsertActionRequest) {
         presentationPracticeService.insertPresentation(qrCode, request.notificationStatus.toBoolean())
-        messagingTemplate.convertAndSend("/practice/$qrCode", request)
+        messagingTemplate.convertAndSend("/sub/$qrCode/insert", request)
     }
 
     @MessageMapping("/{qrCode}/update")
-    fun updatePresentationStatus(@PathVariable qrCode: String,
+    fun updatePresentationStatus(@DestinationVariable qrCode: String,
                                 request: UpdateActionRequest) {
         presentationPracticeService.updatePresentationField(qrCode, request)
-        messagingTemplate.convertAndSend("/practice/$qrCode", request)
+        messagingTemplate.convertAndSend("/sub/$qrCode/update", request)
     }
 
     @MessageMapping("/{qrCode}/delete")
@@ -56,9 +62,9 @@ class PresentationStatusController(
     }
 
     @MessageMapping("/{qrCode}/{field}")
-    fun getPresentationStatus(@PathVariable qrCode: String,
-                              @PathVariable field: String) {
+    fun getPresentationStatus(@DestinationVariable qrCode: String,
+                              @DestinationVariable field: String) {
         val value = presentationPracticeService.getPresentationStatus(qrCode, field)
-        messagingTemplate.convertAndSend("/practice/$qrCode", value!!)
+        messagingTemplate.convertAndSend("/sub/$qrCode/$value")
     }
 }
