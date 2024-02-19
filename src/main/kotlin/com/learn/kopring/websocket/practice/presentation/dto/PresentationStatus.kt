@@ -1,4 +1,4 @@
-package com.learn.kopring.websocket.dto
+package com.learn.kopring.websocket.practice.presentation.dto
 
 import java.time.LocalDateTime
 
